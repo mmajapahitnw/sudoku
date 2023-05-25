@@ -11,9 +11,13 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Sudoku')
 clock = pg.time.Clock()
 
+# create name on top
 name_font = pg.font.Font('assets/BaiJamjuree-Bold.ttf', 40)
-name_text = name_font.render('SOLVER', True, 'white')
-name_rect = name_text.get_rect(center=(WIDTH//2, 75//2))
+name_surf = name_font.render('SOLVER', True, 'white')
+name_rect = name_surf.get_rect(center=(WIDTH // 2, 75 // 2))
+
+# create highlight box
+hl_box_surf = pg.draw.rect(screen, 'crimson', (7, 87, 52, 52), 3, 2)
 
 # make list of lists of cell's coordinates
 cells = []
@@ -45,8 +49,6 @@ for i in range(9):
             if j == 3 or j == 6:
                 cells[i][j][0] += 6
 
-
-
 while True:
     # event loop
     for event in pg.event.get():
@@ -66,6 +68,10 @@ while True:
             pg.draw.rect(screen, 'white', (x, y, 50, 50), 0, 2)
 
     # draw name
-    screen.blit(name_text, name_rect)
+    screen.blit(name_surf, name_rect)
+
+    # create highlight box
+    hl_box_surf = pg.draw.rect(screen, 'crimson', (7, 87, 52, 52), 3, 2)
+
     pg.display.update()
     clock.tick(60)
