@@ -16,18 +16,23 @@ for i in range(9):
         if i == 0 and j == 0:
             x = y = 8
         else:
-            try:
-                x = cells[i][j-1][0] + 53
-            except IndexError:
-                x = 8
-            try:
-                y = cells[i-1][j][0] + 53
-            except IndexError:
+            if i == 0:
                 y = 8
-            if i == 3 or i == 6:
-                x += 5
-            if j == 3 or j == 6:
-                y += 5
+                x = cells[i][j-1][0] + 53
+                if j == 3 or j == 6:
+                    x += 5
+            elif j == 0:
+                x = 8
+                y = cells[i-1][j][1] + 53
+                if i == 3 or i == 6:
+                    y += 5
+            else:
+                x = cells[i - 1][j][0] + 53
+                y = cells[i][j - 1][1] + 53
+                if i == 3 or i == 6:
+                    x += 5
+                if j == 3 or j == 6:
+                    y += 5
         cell = (x, y)
         row.append(cell)
     cells.append(row)
