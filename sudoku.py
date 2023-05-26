@@ -6,8 +6,14 @@ WIDTH = 502
 HEIGHT = 660
 box_size = 162
 cell_size = 50
-grid_start = [8, 88]
-grid_end = [grid_start[0] + 3*10 + 12 + 450, grid_start[1] + 3*10 + 12 + 450]
+
+# pads
+title_pad = 85
+border_pad = 5
+small_pad = 3
+
+grid_start = [border_pad+small_pad, title_pad+small_pad]
+grid_end = [grid_start[0] + small_pad*12 + cell_size*9, grid_start[1] + small_pad*12 + cell_size*9]
 
 hl_x = 0
 hl_y = 0
