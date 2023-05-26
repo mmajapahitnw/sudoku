@@ -27,6 +27,8 @@ grid_end = [grid_start[0] + small_pad*12 + cell_size*9, grid_start[1] + small_pa
 hl_x = 0
 hl_y = 0
 
+game_solve = False
+
 
 
 class Number_Button(pg.sprite.Sprite):
@@ -42,13 +44,14 @@ class Number_Button(pg.sprite.Sprite):
         num_rect = num_surf.get_rect(center=(cells[hl_x][hl_y][0]+cell_size//2, cells[hl_x][hl_y][1]+cell_size//2))
         cells[hl_x][hl_y][3] = num_surf
         cells[hl_x][hl_y][4] = num_rect
-        print(cells[hl_x][hl_y])
 
     def update(self):
         for button in num_buttons:
             if button.rect.collidepoint(event.pos):
                 self.button_clicked(button.index+1)
 
+def solve():
+    pass
 
 def draw_highlight(x, y):
     # create highlight box
@@ -125,51 +128,63 @@ for i in range(1, 10):
 
 ############### THE MAIN LOOP ##############
 while True:
-    # event loop
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            exit()
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                num_buttons.update()
-            mouse_pos = pg.mouse.get_pos()
-            if grid_start[0] < mouse_pos[0] < grid_end[0] and \
-                    grid_start[1] < mouse_pos[1] < grid_end[1]:
-                for i in range(9):
-                    for j in range(9):
-                        if cells[j][i][0] < mouse_pos[0] < (cells[j][i][0] + cell_size) and \
-                                cells[j][i][1] < mouse_pos[1] < (cells[j][i][1] + cell_size):
-                            hl_x = j
-                            hl_y = i
-                            break
+    if not game_solve:
+        # event loop
+        for event in pg.event.get():
+            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                solve()
+                game_solve = True
+            if event.type == pg.QUIT:
+                pg.quit()
+                exit()
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    num_buttons.update()
+                mouse_pos = pg.mouse.get_pos()
+                if grid_start[0] < mouse_pos[0] < grid_end[0] and \
+                        grid_start[1] < mouse_pos[1] < grid_end[1]:
+                    for i in range(9):
+                        for j in range(9):
+                            if cells[j][i][0] < mouse_pos[0] < (cells[j][i][0] + cell_size) and \
+                                    cells[j][i][1] < mouse_pos[1] < (cells[j][i][1] + cell_size):
+                                hl_x = j
+                                hl_y = i
+                                break
 
-    screen.fill('burlywood')
-    # draw boxes
-    for i in range(3):
-        for j in range(3):
-            pg.draw.rect(screen, 'chocolate', (i*(box_size+3)+5, j*(box_size+3)+85, box_size, box_size), 0, 5)
+        screen.fill('burlywood')
+        # draw boxes
+        for i in range(3):
+            for j in range(3):
+                pg.draw.rect(screen, 'chocolate', (i*(box_size+3)+5, j*(box_size+3)+85, box_size, box_size), 0, 5)
 
-    # draw cells
-    for row in cells:
-        for cell in row:
-            pg.draw.rect(screen, 'white', (cell[0], cell[1], 50, 50), 0, 2)
+        # draw cells
+        for row in cells:
+            for cell in row:
+                pg.draw.rect(screen, 'white', (cell[0], cell[1], 50, 50), 0, 2)
 
-    # draw num buttons
-    num_buttons.draw(screen)
+        # draw num buttons
+        num_buttons.draw(screen)
 
-    # draw num on buttons
-    for i in range(9):
-        screen.blit(num_surfs[i][0], num_surfs[i][1])
+        # draw num on buttons
+        for i in range(9):
+            screen.blit(num_surfs[i][0], num_surfs[i][1])
 
-    # draw name
-    screen.blit(name_surf, name_rect)
+        # draw name
+        screen.blit(name_surf, name_rect)
 
-    # create highlight box
-    draw_highlight(hl_x, hl_y)
+        # create highlight box
+        draw_highlight(hl_x, hl_y)
 
-    # draw number
-    draw_number()
+        # draw number
+        draw_number()
+
+    else:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                exit()
+
+        num_buttons.draw(screen)
 
     pg.display.update()
     clock.tick(60)
