@@ -6,6 +6,8 @@ WIDTH = 502
 HEIGHT = 660
 box_size = 162
 cell_size = 50
+grid_start = [8, 88]
+grid_end = [grid_start[0] + 3*10 + 12 + 450, grid_start[1] + 3*10 + 12 + 450]
 
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Sudoku')
@@ -55,6 +57,17 @@ while True:
         if event.type == pg.QUIT:
             pg.quit()
             exit()
+        if event.type == pg.MOUSEBUTTONDOWN:
+            mouse_pos = pg.mouse.get_pos()
+            if grid_start[0] < mouse_pos[0] < grid_end[0] and \
+                    grid_start[1] < mouse_pos[1] < grid_end[1]:
+                for i in range(9):
+                    for j in range(9):
+                        if cells[j][i][0] < mouse_pos[0] < (cells[j][i][0] + cell_size) and \
+                                cells[j][i][1] < mouse_pos[1] < (cells[j][i][1] + cell_size):
+                            x = j
+                            y = i
+                print(f"{x}, {y}")
 
     screen.fill('burlywood')
     # draw boxes
