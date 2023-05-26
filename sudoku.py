@@ -9,6 +9,13 @@ cell_size = 50
 grid_start = [8, 88]
 grid_end = [grid_start[0] + 3*10 + 12 + 450, grid_start[1] + 3*10 + 12 + 450]
 
+hl_x = 0
+hl_y = 0
+
+def draw_highlight(x, y):
+    # create highlight box
+    hl_box_surf = pg.draw.rect(screen, 'crimson', (cells[x][y][0], cells[x][y][1], cell_size, cell_size), 3, 2)
+
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Sudoku')
 clock = pg.time.Clock()
@@ -18,8 +25,7 @@ name_font = pg.font.Font('assets/BaiJamjuree-Bold.ttf', 40)
 name_surf = name_font.render('SOLVER', True, 'white')
 name_rect = name_surf.get_rect(center=(WIDTH // 2, 75 // 2))
 
-# create highlight box
-hl_box_surf = pg.draw.rect(screen, 'crimson', (7, 87, 52, 52), 3, 2)
+
 
 # make list of lists of cell's coordinates
 cells = []
@@ -65,8 +71,9 @@ while True:
                     for j in range(9):
                         if cells[j][i][0] < mouse_pos[0] < (cells[j][i][0] + cell_size) and \
                                 cells[j][i][1] < mouse_pos[1] < (cells[j][i][1] + cell_size):
-                            x = j
-                            y = i
+                            hl_x = j
+                            hl_y = i
+                            break
                 print(f"{x}, {y}")
 
     screen.fill('burlywood')
@@ -84,7 +91,7 @@ while True:
     screen.blit(name_surf, name_rect)
 
     # create highlight box
-    hl_box_surf = pg.draw.rect(screen, 'crimson', (7, 87, 52, 52), 3, 2)
+    draw_highlight(hl_x, hl_y)
 
     pg.display.update()
     clock.tick(60)
