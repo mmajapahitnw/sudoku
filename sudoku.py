@@ -20,7 +20,7 @@ hl_y = 0
 
 def draw_highlight(x, y):
     # create highlight box
-    hl_box_surf = pg.draw.rect(screen, 'crimson', (cells[x][y][0], cells[x][y][1], cell_size, cell_size), 3, 2)
+    pg.draw.rect(screen, 'crimson', (cells[x][y][0], cells[x][y][1], cell_size, cell_size), 3, 2)
 
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Sudoku')
@@ -39,29 +39,29 @@ cells = []
 for i in range(9):
     row = []
     for j in range(9):
-        cell = [0, 0]
+        cell = [0, 0, 0]
         row.append(cell)
     cells.append(row)
 # generating coordinates
 for i in range(9):
     for j in range(9):
         if i == 0 and j == 0:
-            cells[i][j][0] = 8
-            cells[i][j][1] = 88
+            cells[i][j][0] = grid_start[0]
+            cells[i][j][1] = grid_start[1]
         else:
             if i == 0:
-                cells[i][j][1] = 88
-                cells[i][j][0] = cells[i][j - 1][0] + 53
+                cells[i][j][1] = grid_start[1]
+                cells[i][j][0] = cells[i][j - 1][0] + cell_size + small_pad
             elif j == 0:
-                cells[i][j][0] = 8
-                cells[i][j][1] = cells[i - 1][j][1] + 53
+                cells[i][j][0] = grid_start[0]
+                cells[i][j][1] = cells[i - 1][j][1] + cell_size + small_pad
             else:
-                cells[i][j][0] = cells[i][j - 1][0] + 53
-                cells[i][j][1] = cells[i - 1][j][1] + 53
+                cells[i][j][0] = cells[i][j - 1][0] + cell_size + small_pad
+                cells[i][j][1] = cells[i - 1][j][1] + cell_size + small_pad
             if i == 3 or i == 6:
-                cells[i][j][1] += 6
+                cells[i][j][1] += small_pad*2
             if j == 3 or j == 6:
-                cells[i][j][0] += 6
+                cells[i][j][0] += small_pad*2
 
 while True:
     # event loop
@@ -80,7 +80,6 @@ while True:
                             hl_x = j
                             hl_y = i
                             break
-                print(f"{x}, {y}")
 
     screen.fill('burlywood')
     # draw boxes
@@ -90,8 +89,8 @@ while True:
 
     # draw cells
     for row in cells:
-        for x,y in row:
-            pg.draw.rect(screen, 'white', (x, y, 50, 50), 0, 2)
+        for cell in row:
+            pg.draw.rect(screen, 'white', (cell[0], cell[1], 50, 50), 0, 2)
 
     # draw name
     screen.blit(name_surf, name_rect)
