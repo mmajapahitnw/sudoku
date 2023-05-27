@@ -20,19 +20,21 @@ class Number_Button(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.image.load('assets/num_frame.png')
         self.index = index
-        self.rect = self.image.get_rect(topleft=(LR_pad + self.index*(button_width+mid_pad), HEIGHT-bottom_pad-button_height))
+        self.rect = self.image.get_rect(topleft=(LR_pad + self.index*(button_width+mid_pad),
+                                                 HEIGHT-bottom_pad-button_height))
 
     def button_clicked(self, num):
         Cells.cells[hl_x][hl_y][2] = num
         num_surf = Cells.cell_font.render(str(num), True, 'red')
-        num_rect = num_surf.get_rect(center=(Cells.cells[hl_x][hl_y][0]+cell_size//2, Cells.cells[hl_x][hl_y][1]+cell_size//2))
+        num_rect = num_surf.get_rect(center=(Cells.cells[hl_x][hl_y][0]+cell_size//2,
+                                             Cells.cells[hl_x][hl_y][1]+cell_size//2))
         Cells.cells[hl_x][hl_y][3] = num_surf
         Cells.cells[hl_x][hl_y][4] = num_rect
 
     def update(self):
         for button in num_buttons:
             if button.rect.collidepoint(event.pos):
-                self.button_clicked(button.index+1)
+                self.button_clicked(button.index)
 
 
 
@@ -55,23 +57,18 @@ name_font = pg.font.Font('assets/BaiJamjuree-Bold.ttf', 40)
 name_surf = name_font.render('SOLVER', True, 'white')
 name_rect = name_surf.get_rect(center=(WIDTH // 2, 75 // 2))
 
-# create font for cells
-
-# cell_printed = []
-
-
-# make list of lists of cell's coordinates
-
-
-
 # sprites time!
 num_buttons = pg.sprite.Group()
 num_surfs = []
 
-for i in range(1, 10):
-    num_buttons.add(Number_Button(i-1))
-    num_surf = name_font.render(str(i), True, 'black')
-    num_rect = num_surf.get_rect(center=(LR_pad + (i-1)*(button_width+mid_pad) + button_width//2, HEIGHT-bottom_pad-button_height//2))
+for i in range(10):
+    if i == 0:
+        num_surf = name_font.render('X', True, 'black')
+    else:
+        num_surf = name_font.render(str(i), True, 'black')
+    num_buttons.add(Number_Button(i))
+    num_rect = num_surf.get_rect(center=(LR_pad + (i)*(button_width+mid_pad) + button_width//2,
+                                         HEIGHT-bottom_pad-button_height//2))
     item = [num_surf, num_rect]
     num_surfs.append(item)
 
@@ -117,7 +114,7 @@ while True:
         num_buttons.draw(screen)
 
         # draw num on buttons
-        for i in range(9):
+        for i in range(10):
             screen.blit(num_surfs[i][0], num_surfs[i][1])
 
         # draw name
