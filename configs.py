@@ -8,10 +8,16 @@ title_pad = 85
 border_pad = 5
 small_pad = 3
 
-# pads for buttons
+# pads for number buttons
 bottom_pad = 12
 LR_pad = 24
 mid_pad = 6
+
+# pad for solve reset buttons
+x_pad = 24
+y_pad = 20
+solve_width = 80
+solve_height = 40
 
 button_width = 40
 button_height = 60

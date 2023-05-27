@@ -18,11 +18,9 @@ def is_valid(row, col, num, n):
         for j in range(3):
             if Cells.cells[start_row + i][start_col + j][2] == num:
                 return False
-    print('validating: true')
     return True
 
 def solve(row, col, n):
-    print('calculating')
     if row == n - 1 and col == n:
         return True
 

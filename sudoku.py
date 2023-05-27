@@ -1,21 +1,16 @@
 import pygame as pg
 from cells import Cells
 from configs import *
-from calculate import solve, is_valid
+from calculate import solve
 
 pg.init()
-
-# define all of config variables
-
 
 hl_x = 0
 hl_y = 0
 
 game_solve = False
 
-
-
-class Number_Button(pg.sprite.Sprite):
+class NumberButton(pg.sprite.Sprite):
     def __init__(self, index):
         super().__init__()
         self.image = pg.image.load('assets/num_frame.png')
@@ -48,6 +43,11 @@ def draw_number():
             if Cells.cells[j][i][2] != 0:
                 screen.blit(Cells.cells[j][i][3], Cells.cells[j][i][4])
 
+def reset_values():
+    for i in range(9):
+        for j in range(9):
+            Cells.cells[j][i][2] = 0
+
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption('Sudoku')
 clock = pg.time.Clock()
@@ -56,6 +56,19 @@ clock = pg.time.Clock()
 name_font = pg.font.Font('assets/BaiJamjuree-Bold.ttf', 40)
 name_surf = name_font.render('SOLVER', True, 'white')
 name_rect = name_surf.get_rect(center=(WIDTH // 2, 75 // 2))
+
+# solve and reset buttons
+solve_reset_font = pg.font.Font('assets/BaiJamjuree-Bold.ttf', 20)
+
+solve_surf = pg.image.load('assets/solve_reset_frame.png')
+solve_rect = solve_surf.get_rect(topleft=(x_pad, y_pad))
+solve_text = solve_reset_font.render('SOLVE', True, 'brown')
+solve_text_rect = solve_text.get_rect(center=(x_pad+solve_width//2, y_pad+solve_height//2))
+
+reset_surf = pg.image.load('assets/solve_reset_frame.png')
+reset_rect = reset_surf.get_rect(topright=(WIDTH-x_pad, y_pad))
+reset_text = solve_reset_font.render('RESET', True, 'brown')
+reset_text_rect = reset_text.get_rect(center=((WIDTH-x_pad)-solve_width//2, y_pad+solve_height//2))
 
 # sprites time!
 num_buttons = pg.sprite.Group()
@@ -66,7 +79,7 @@ for i in range(10):
         num_surf = name_font.render('X', True, 'black')
     else:
         num_surf = name_font.render(str(i), True, 'black')
-    num_buttons.add(Number_Button(i))
+    num_buttons.add(NumberButton(i))
     num_rect = num_surf.get_rect(center=(LR_pad + (i)*(button_width+mid_pad) + button_width//2,
                                          HEIGHT-bottom_pad-button_height//2))
     item = [num_surf, num_rect]
@@ -78,16 +91,10 @@ while True:
     if not game_solve:
         # event loop
         for event in pg.event.get():
-            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-                print(Cells.cells[0][5][2])
-                is_solved = solve(0, 0, 9)
-                game_solve = True
             if event.type == pg.QUIT:
                 pg.quit()
                 exit()
             if event.type == pg.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    num_buttons.update()
                 mouse_pos = pg.mouse.get_pos()
                 if grid_start[0] < mouse_pos[0] < grid_end[0] and \
                         grid_start[1] < mouse_pos[1] < grid_end[1]:
@@ -98,6 +105,14 @@ while True:
                                 hl_x = j
                                 hl_y = i
                                 break
+                elif mouse_pos[1] < title_pad:
+                    if solve_rect.collidepoint(mouse_pos):
+                        is_solved = solve(0, 0, 9)
+                        game_solve = True
+                    elif reset_rect.collidepoint(mouse_pos):
+                        reset_values()
+                else:
+                    num_buttons.update()
 
         screen.fill('burlywood')
         # draw boxes
@@ -109,6 +124,12 @@ while True:
         for row in Cells.cells:
             for cell in row:
                 pg.draw.rect(screen, 'white', (cell[0], cell[1], 50, 50), 0, 2)
+
+        # draw solve and reset buttons
+        screen.blit(solve_surf, solve_rect)
+        screen.blit(solve_text, solve_text_rect)
+        screen.blit(reset_surf, reset_rect)
+        screen.blit(reset_text, reset_text_rect)
 
         # draw num buttons
         num_buttons.draw(screen)
@@ -131,6 +152,12 @@ while True:
             if event.type == pg.QUIT:
                 pg.quit()
                 exit()
+            if event.type == pg.MOUSEBUTTONDOWN:
+                mouse_pos = pg.mouse.get_pos()
+                if mouse_pos[1] < title_pad:
+                    if reset_rect.collidepoint(mouse_pos):
+                        reset_values()
+                        game_solve = False
         # if is_solved:
         draw_number()
 
