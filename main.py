@@ -5,6 +5,7 @@ from calculate import solve
 
 pg.init()
 
+# highlight box coordinates
 hl_x = 0
 hl_y = 0
 
@@ -158,9 +159,7 @@ while True:
                     if reset_rect.collidepoint(mouse_pos):
                         reset_values()
                         game_solve = False
-        # if is_solved:
         draw_number()
-
 
     pg.display.update()
     clock.tick(60)
