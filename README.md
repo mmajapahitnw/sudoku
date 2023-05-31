@@ -1,2 +1,2 @@
 # sudoku
-my attempt at simple sudoku game using pygame
+my attempt at simple sudoku solver using pygame
